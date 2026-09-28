@@ -1,0 +1,15 @@
+{
+  "target": "sample", "generatedAt": "2026-09-25", "commit": "abc1234", "mode": "full",
+  "findings": [
+    { "id": "SAMPLE-001", "fingerprint": "T-VALIDATION:route:PATCH /orders/{id}", "title": "PATCH without model",
+      "stride": ["T"], "element": "route:PATCH /orders/{id}", "severity": "medium", "likelihood": "medium", "impact": "medium",
+      "confidence": "confirmed", "status": "open",
+      "evidence": [{ "file": "tests/fixtures/sample-stack.ts", "line": 30 }],
+      "scenario": "s", "recommendation": "r", "effort": "S" },
+    { "id": "SAMPLE-002", "fingerprint": "S-ROUTE-PUBLIC:route:GET /public/thing", "title": "Public route",
+      "stride": ["S"], "element": "route:GET /public/thing", "severity": "low", "likelihood": "low", "impact": "low",
+      "confidence": "likely", "status": "accepted-risk", "statusReason": "Intended public content, accepted by owner",
+      "evidence": [{ "file": "tests/fixtures/sample-stack.ts", "line": 27 }],
+      "scenario": "s", "recommendation": "r", "effort": "S" }
+  ]
+}

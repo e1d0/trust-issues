@@ -1,0 +1,16 @@
+openapi: 3.0.3
+info: { title: sample, version: '1' }
+security: []
+paths:
+  /public/thing:
+    get: { responses: { '200': { description: ok } } }
+  /orders:
+    post: { security: [{ sessionAuth: [] }], responses: { '200': { description: ok } } }
+  /orders/{orderId}:
+    patch: { responses: { '200': { description: ok } } }
+  /config:
+    get: { security: [{ apiKeyAuth: [] }], responses: { '200': { description: ok } } }
+  /wishlist/items:
+    get: { responses: { '200': { description: ok } } }
+  /ghost:
+    get: { responses: { '200': { description: ok } } }

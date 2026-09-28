@@ -1,0 +1,52 @@
+# trust-issues profile: copy to <your repo>/.trust-issues/targets.yaml and fill in.
+# Paths are relative to the repo root. Keep this file in your repo, not in the skill.
+# A target is anything worth modeling on its own: one function, a few endpoints, a stack, or a whole system such as a BFF.
+# A one-off run needs no entry: pass paths directly, for example  /trust-issues services/orders
+#
+# Target fields
+#   id        short name, used for the run folder and finding ids
+#   kind      lambda | endpoints | worker | webhook | stack | system
+#   stacks    IaC files that define the target's entry points (CDK TypeScript is parsed; others are read by hand)
+#   match     optional text or list passed to extract-entry-points --match, to keep only this target's routes and resources
+#   paths     code to read (function folders, packages)
+#   spec      optional OpenAPI file, compared with the stack by spec-drift
+#   callers   who or what calls it, and with which credential
+#   assets    what an attacker would want from it
+#   owner     who triages findings
+
+defaults:
+  reportDir: .trust-issues/runs            # <reportDir>/<id>/<YYYY-MM-DD>/ ; add it to .gitignore if reports must stay local
+  baseBranch: main                         # default --since for diff mode
+  sensitivity: [public, internal, PII, payment, credential]
+  ownerRoles:                              # used for findings' ownerRole and for routing open questions
+    backend: service owners
+    platform: infrastructure, IAM, networking, shared constructs
+    security: security and compliance
+    privacy: data protection, for PII and decisions about people
+  sharedCode:                              # read once per run; findings here apply to every target
+    - infra/lib/constructs
+    - packages/http-utils
+
+targets:
+  - id: orders-api
+    kind: endpoints
+    why: Serves order history and order changes to signed-in customers.
+    stacks: [infra/lib/shop-api-stack.ts]
+    match: [orders]
+    paths: [services/orders]
+    callers: web shop and mobile app, with a session cookie
+    assets: [order history, customer PII]
+    owner: TBD
+
+  - id: payment-webhook
+    kind: webhook
+    stacks: [infra/lib/payments-stack.ts]
+    paths: [services/payment-webhook]
+    callers: payment provider servers, HMAC-signed
+    assets: [payment status integrity]
+    owner: TBD
+
+groups:
+  apis:
+    description: Everything the frontends call directly.
+    members: [orders-api, payment-webhook]

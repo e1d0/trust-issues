@@ -1,0 +1,20 @@
+{
+  "target": "sample", "generatedAt": "2026-09-28", "commit": "abc1234", "mode": "full",
+  "findings": [
+    { "id": "SAMPLE-001", "fingerprint": "T-VALIDATION:route:PATCH /orders/{id}", "title": "PATCH without model",
+      "stride": ["T", "E"], "element": "route:PATCH /orders/{id}", "severity": "high", "likelihood": "medium", "impact": "high",
+      "confidence": "confirmed", "status": "open", "residual": "High until a model is added", "ownerRole": "backend",
+      "evidence": [{ "file": "tests/fixtures/sample-stack.ts", "line": 30 }],
+      "scenario": "s", "recommendation": "Add a request model", "effort": "S" },
+    { "id": "SAMPLE-002", "fingerprint": "I-CORS:shared:builder/apigateway.ts", "title": "CORS on the HTTP API",
+      "stride": ["I"], "element": "shared:builder/apigateway.ts", "severity": "low", "likelihood": "low", "impact": "low",
+      "confidence": "confirmed", "status": "mitigated", "statusReason": "HTTP API allowOrigins is a fixed list, not a wildcard",
+      "evidence": [{ "file": "tests/fixtures/sample-stack.ts", "line": 45 }],
+      "scenario": "s", "recommendation": "Keep the origin list fixed", "effort": "S" },
+    { "id": "SAMPLE-003", "fingerprint": "S-ROUTE-PUBLIC:route:GET /public/thing", "title": "Public route",
+      "stride": ["S"], "element": "route:GET /public/thing", "severity": "low", "likelihood": "low", "impact": "low",
+      "confidence": "likely", "status": "false-positive", "statusReason": "Static marketing content",
+      "evidence": [{ "file": "tests/fixtures/sample-stack.ts", "line": 27 }],
+      "scenario": "s", "recommendation": "r", "effort": "S" }
+  ]
+}

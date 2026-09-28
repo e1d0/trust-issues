@@ -1,0 +1,12 @@
+{
+  "target": "sample", "generatedAt": "2026-09-25", "commit": "abc1234", "mode": "full",
+  "findings": [
+    { "id": "SAMPLE-001", "fingerprint": "X:1", "title": "Hallucinated line", "stride": ["Q"], "element": "e",
+      "severity": "severe", "likelihood": "medium", "impact": "medium", "confidence": "confirmed", "status": "false-positive",
+      "evidence": [{ "file": "tests/fixtures/sample-stack.ts", "line": 9999 }, { "file": "does/not/exist.ts", "line": 1 }],
+      "scenario": "s", "recommendation": "r", "effort": "S" },
+    { "id": "SAMPLE-001", "fingerprint": "X:1", "title": "Dup", "stride": ["S"], "element": "e", "severity": "low",
+      "likelihood": "low", "impact": "low", "confidence": "likely", "status": "open", "evidence": [],
+      "scenario": "s", "recommendation": "r", "effort": "S" }
+  ]
+}

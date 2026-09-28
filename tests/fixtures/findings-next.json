@@ -1,0 +1,13 @@
+{
+  "target": "sample", "generatedAt": "2026-10-25", "commit": "def5678", "mode": "verify",
+  "findings": [
+    { "id": "SAMPLE-001", "fingerprint": "T-VALIDATION:route:PATCH /orders/{id}", "title": "PATCH without model",
+      "stride": ["T"], "element": "route:PATCH /orders/{id}", "severity": "medium", "likelihood": "medium", "impact": "medium",
+      "confidence": "confirmed", "status": "fixed",
+      "evidence": [{ "file": "tests/fixtures/sample-stack.ts", "line": 29 }], "scenario": "s", "recommendation": "r", "effort": "S" },
+    { "id": "SAMPLE-003", "fingerprint": "I-BOLA:lambda:order", "title": "New BOLA",
+      "stride": ["I"], "element": "lambda:order", "severity": "high", "likelihood": "high", "impact": "medium",
+      "confidence": "likely", "status": "open",
+      "evidence": [{ "file": "tests/fixtures/sample-stack.ts", "line": 27 }], "scenario": "s", "recommendation": "r", "effort": "M" }
+  ]
+}

@@ -1,0 +1,18 @@
+name = "edge-gateway"
+main = "src/index.ts"
+routes = [{ pattern = "api.example.com/*", zone_name = "example.com" }]
+
+[triggers]
+crons = ["0 3 * * *"]
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "placeholder"
+
+[[services]]
+binding = "ORDERS"
+service = "orders-service"
+
+[vars]
+UPSTREAM_URL = "https://origin.example.com"
+SIGNING_SECRET = "placeholder"

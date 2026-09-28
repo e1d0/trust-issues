@@ -1,0 +1,127 @@
+{
+  "skill_name": "trust-issues",
+  "notes": "Run each eval in a fresh session with the skill loaded, from this skill's folder. The fixtures folder has its own .trust-issues/ profile. Score with: node evals/score.mjs <eval-id> <findings.json>. Planted issues are the ground truth. Decoys must not be reported as vulnerabilities; reporting a decoy as mitigated is fine.",
+  "evals": [
+    {
+      "id": "mini-api-full",
+      "prompt": "/trust-issues mini-api full --no-gates --root evals/fixtures",
+      "expected_output": "A run folder under evals/fixtures/.out/mini-api/ with THREAT_MODEL.md and a findings.json that passes the validator.",
+      "must_find": [
+        {
+          "checks": [
+            "I-BOLA"
+          ],
+          "elementIncludes": "order",
+          "why": "order-api returns any order by id without comparing customerId"
+        },
+        {
+          "checks": [
+            "S-AUTHZ-CACHE"
+          ],
+          "elementIncludes": "authorizer",
+          "why": "authorizer validates Cookie but caches by Authorization header"
+        },
+        {
+          "checks": [
+            "D-AMPLIFY",
+            "D-RATE",
+            "S-ROUTE-PUBLIC"
+          ],
+          "elementIncludes": "contact",
+          "why": "anonymous route sends email to any address"
+        },
+        {
+          "checks": [
+            "I-LOGGING"
+          ],
+          "elementIncludes": "profile",
+          "why": "profile-api logs all headers including Cookie"
+        }
+      ],
+      "should_find": [
+        {
+          "checks": [
+            "S-AUTHZ-POLICY",
+            "E-RESOURCE-POLICY"
+          ],
+          "elementIncludes": "authorizer",
+          "why": "wildcard policy resource plus caching"
+        },
+        {
+          "checks": [
+            "T-VALIDATION"
+          ],
+          "elementIncludes": "contact",
+          "why": "POST without model"
+        }
+      ],
+      "must_not_find": [
+        {
+          "checks": [
+            "I-BOLA"
+          ],
+          "elementIncludes": "address",
+          "why": "address-api checks ownership correctly"
+        }
+      ]
+    },
+    {
+      "id": "mini-worker-full",
+      "prompt": "/trust-issues mini-worker full --no-gates --root evals/fixtures",
+      "expected_output": "A run folder under evals/fixtures/.out/mini-worker/ with THREAT_MODEL.md and a findings.json that passes the validator. The model covers the queue, not only the route.",
+      "must_find": [
+        {
+          "checks": [
+            "T-INJECTION",
+            "W-TRUST-INPUT"
+          ],
+          "elementIncludes": "points-sync",
+          "why": "customerNumber from the message is concatenated into SQL"
+        },
+        {
+          "checks": [
+            "W-IDEMPOTENCY",
+            "T-BUSINESS"
+          ],
+          "elementIncludes": "points",
+          "why": "eventId is never checked, so redelivery books points twice"
+        },
+        {
+          "checks": [
+            "T-VALIDATION",
+            "W-TRUST-INPUT",
+            "T-QUEUE"
+          ],
+          "elementIncludes": "points",
+          "why": "public API-key route writes unvalidated payloads straight into the queue, and points can be any number"
+        }
+      ],
+      "should_find": [
+        {
+          "checks": [
+            "S-APIKEY",
+            "H-AUTH"
+          ],
+          "elementIncludes": "partner",
+          "why": "partner authenticates with an API key only, no signature"
+        },
+        {
+          "checks": [
+            "W-POISON"
+          ],
+          "elementIncludes": "points",
+          "why": "no DLQ or partial batch failure handling visible"
+        }
+      ],
+      "must_not_find": [
+        {
+          "checks": [
+            "T-INJECTION"
+          ],
+          "elementIncludes": "country",
+          "why": "country is validated against ^[A-Z]{2}$ before use"
+        }
+      ]
+    }
+  ]
+}

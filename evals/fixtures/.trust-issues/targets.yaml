@@ -1,0 +1,21 @@
+# Profile for the eval fixtures. Paths are relative to this fixtures folder (pass it as --root).
+# Deliberately weak code with planted issues; see evals/evals.json for the ground truth.
+defaults:
+  reportDir: .out
+  sharedCode: []
+targets:
+  - id: mini-api
+    kind: endpoints
+    stacks: [mini-api/infrastructure/lib/mini-stack.ts]
+    paths: [mini-api/lambdas/mini]
+    callers: browsers, anonymous or with a session cookie
+    assets: [customer orders, customer PII, session tokens]
+  - id: mini-worker
+    kind: worker
+    stacks: [mini-worker/infrastructure/lib/worker-stack.ts]
+    paths: [mini-worker/lambdas/points-sync]
+    callers: SQS queue fed by a partner route
+    assets: [loyalty point balances, customer records]
+groups:
+  all-fixtures:
+    members: [mini-api, mini-worker]

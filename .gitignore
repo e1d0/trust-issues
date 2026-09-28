@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+# Run output from evals and local runs. Reports describe weaknesses; never commit them here.
+evals/fixtures/.out/
+.trust-issues/runs/
+**/.trust-issues/runs/

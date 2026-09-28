@@ -1,0 +1,30 @@
+{
+  "target": "sample",
+  "diagrams": [
+    {
+      "key": "0-overview",
+      "title": "0 - Overview",
+      "nodes": [
+        { "id": "actor:browser", "kind": "actor", "tier": 0, "name": "Customer browser", "trust": "1 - Internet" },
+        { "id": "lambda:sample", "kind": "process", "tier": 1, "name": "Sample API lambdas", "trust": "2 - AWS account", "elements": ["route:*", "lambda:*"] },
+        { "id": "store:dynamodb:orders", "kind": "store", "tier": 2, "name": "Orders table", "trust": "2 - AWS account" }
+      ],
+      "flows": [
+        { "from": "actor:browser", "to": "lambda:sample", "data": "order update", "sensitivity": "PII", "credential": "session cookie" },
+        { "from": "lambda:sample", "to": "store:dynamodb:orders", "data": "order record", "sensitivity": "PII", "assumed": true }
+      ]
+    },
+    {
+      "key": "1-orders",
+      "title": "1 - Orders routes",
+      "nodes": [
+        { "id": "actor:browser", "kind": "actor", "tier": 0, "name": "Customer browser", "trust": "1 - Internet" },
+        { "id": "route:PATCH /orders/{id}", "kind": "process", "tier": 1, "name": "PATCH /orders/{id}", "trust": "2 - API Gateway" },
+        { "id": "route:GET /public/thing", "kind": "process", "tier": 1, "name": "GET /public/thing", "trust": "2 - API Gateway" }
+      ],
+      "flows": [
+        { "from": "actor:browser", "to": "route:PATCH /orders/{id}", "data": "order patch", "sensitivity": "PII", "credential": "session cookie" }
+      ]
+    }
+  ]
+}
